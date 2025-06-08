@@ -2,3 +2,5 @@
 *.csv
 /Rat
 /Mouse
+venv
+/venv
