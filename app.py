@@ -16,12 +16,12 @@ st.sidebar.header("Load & Settings")
 
 csv_path = st.sidebar.text_input(
     "Path to annotations CSV:",
-    value="Rat/side/annotations_with_clusters.csv",
+    value="Rat/top/annotations_with_clusters.csv",
     help="This CSV must have columns: 'filename', 'cluster', (optionally 'tsne1','tsne2')."
 )
 image_root = st.sidebar.text_input(
     "Image folder/root path:",
-    value="Rat/side/images",
+    value="Rat/top/images",
     help="Where to look for each image filename in the CSV."
 )
 
