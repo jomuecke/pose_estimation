@@ -1,0 +1,11 @@
+h5py==3.14.0
+numpy==2.2.6
+pandas==2.3.0
+pyasn1==0.6.1
+PySimpleGUI==5.0.10
+python-dateutil==2.9.0.post0
+pytz==2025.2
+PyYAML==6.0.2
+rsa==4.9.1
+six==1.17.0
+tzdata==2025.2
