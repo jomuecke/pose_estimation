@@ -23,8 +23,13 @@ def create_annotation_from_csv(csv_path, meta_xml_path, output_xml_path):
     # Read CSV
     with open(csv_path, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
-        keypoints = sorted(set(col[:-2] for col in reader.fieldnames if col.endswith("-x")))
+        bbox_fields = {"bbox_tl", "bbox_br"}
+        keypoints = sorted(set(
+            col[:-2] for col in reader.fieldnames
+            if col.endswith("-x") and col[:-2] not in bbox_fields
+        ))
         rows = list(reader)
+
 
     for img_id, row in enumerate(rows):
         image = ET.SubElement(annotations, "image", {
@@ -77,8 +82,8 @@ def create_annotation_from_csv(csv_path, meta_xml_path, output_xml_path):
     print(f"CVAT XML written to: {output_xml_path}")
 
 # Example usage
-csv_path = "/Users/jonasmucke/Desktop/filtered/filtered_annotations.csv"
-meta_xml_path = "/Users/jonasmucke/Desktop/merged_output/annotations.xml"  # this file should contain only the <meta>...</meta> block
-output_xml_path = "/Users/jonasmucke/Desktop/filtered/filtered_annotations.xml"
+csv_path = "/Users/jonasmucke/Desktop/filtered/sorted_annotations.csv"
+meta_xml_path = "/Users/jonasmucke/Desktop/merged_output/annotations_meta.xml"  # this file should contain only the <meta>...</meta> block
+output_xml_path = "/Users/jonasmucke/Desktop/filtered/sorted_annotations.xml"
 
 create_annotation_from_csv(csv_path, meta_xml_path, output_xml_path)
