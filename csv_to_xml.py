@@ -82,8 +82,8 @@ def create_annotation_from_csv(csv_path, meta_xml_path, output_xml_path):
     print(f"CVAT XML written to: {output_xml_path}")
 
 # Example usage
-csv_path = "/Users/jonasmucke/Desktop/pose_estimation/Rat/side/annotations_reordered.csv"
+csv_path = "/Users/jonasmucke/Desktop/pose_estimation/Rat/side2194/annotations.csv"
 meta_xml_path = "/Users/jonasmucke/Desktop/merged_output/annotations_meta.xml"  # this file should contain only the <meta>...</meta> block
-output_xml_path = "/Users/jonasmucke/Desktop/pose_estimation/Rat/side/annotations_reordered.xml"
+output_xml_path = "/Users/jonasmucke/Desktop/pose_estimation/Rat/side2194/annotations.xml"
 
 create_annotation_from_csv(csv_path, meta_xml_path, output_xml_path)
