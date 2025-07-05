@@ -5,3 +5,4 @@
 venv
 /venv
 .vscodes
+.DS_Store

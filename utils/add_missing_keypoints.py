@@ -1,7 +1,10 @@
+## Changes the coordinates of keypoints that have not been predicted during inference
+## Puts them above the bounding box, which makes it faster to correct in CVAT
+
 import xml.etree.ElementTree as ET
 
 groups = [
-    ["left_eye", "left_ear_tip", "left_ear_base", "head_midpoint"],
+    ["nose", "left_eye", "left_ear_tip", "left_ear_base", "head_midpoint"],
     ["right_eye", "right_ear_base", "right_ear_tip"],
     ["chest", "throat", "lower_jaw"],
     ["back_withers", "back_midpoint", "back_croup"],
@@ -12,34 +15,34 @@ groups = [
     ["front_right_shoulder", "front_right_elbow", "front_right_paw", "front_right_wrist"],
 ]
 
-file_in = "/Users/jonasmucke/Desktop/annotations_2.xml"
-file_out = "/Users/jonasmucke/Desktop/annotations_filled_upwards.xml"
+input_file = "/Users/jonasmucke/Downloads/predictions_250703_100551.xml"
+output_file = "/Users/jonasmucke/Downloads/predictions_side75_added_keypoints.xml"
 
-tree = ET.parse(file_in)
+tree = ET.parse(input_file)
 root = tree.getroot()
 
 for image in root.findall('image'):
-    # Get the top-left of the bounding box
     box = image.find('box[@label="Bounding Box"]')
     if box is None:
-        continue  # No bounding box for this image, skip
+        continue
 
     xtl = float(box.attrib['xtl'])
     ytl = float(box.attrib['ytl'])
 
     for skeleton in image.findall('skeleton'):
-        # For each group, process missing keypoints
+        # For each group
         for group_idx, group in enumerate(groups):
-            group_x = xtl + group_idx * 40  # 40px right per group
+            group_x = xtl + group_idx * 40
             group_y = ytl
-            points_in_group = [kp for kp in skeleton.findall('points')
-                               if kp.attrib['label'] in group and
-                                  kp.attrib.get('outside', '0') == '1' and
-                                  kp.attrib.get('points', '0.00,0.00') == '0.00,0.00']
-            for j, kp in enumerate(points_in_group):
-                kp.set('outside', '0')
-                # Stack upwards
+            missing = [
+                kp for kp in skeleton.findall('points')
+                if kp.attrib['label'] in group
+                and kp.attrib.get('outside', '0') == '1'
+                and kp.attrib.get('points', '0.0,0.0').replace(" ", "") in ['0.0,0.0', '0.00,0.00']
+            ]
+            for j, kp in enumerate(missing):
                 kp.set('points', f"{group_x:.2f},{group_y - 15*j:.2f}")
+                kp.set('outside', '1')  # keep hidden!
 
-tree.write(file_out, encoding="utf-8", xml_declaration=True)
-print(f"Done! Saved to {file_out}")
+tree.write(output_file, encoding='utf-8', xml_declaration=True)
+print(f"Saved to {output_file}")
